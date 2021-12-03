@@ -1,0 +1,17 @@
+{
+	"name": "codeabase/php-coding-standard",
+	"description": "PHP Coding Standard",
+	"version":"1.0.2",
+	"license":"MIT",
+	"authors": [
+        {
+            "name": "CodeBase",
+            "email": "tuannda586@gmail.com",
+            "homepage": "https://github.com/tuannda",
+            "role": "Developer"
+        }
+    ],
+	"require-dev": {
+		"squizlabs/php_codesniffer": "^3.6"
+	}
+}
