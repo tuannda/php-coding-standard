@@ -20,22 +20,22 @@ class Common extends BaseCommon
      * @var array
      */
     public static $magicMethods = array(
-                                   'construct'  => true,
-                                   'destruct'   => true,
-                                   'call'       => true,
-                                   'callstatic' => true,
-                                   'get'        => true,
-                                   'set'        => true,
-                                   'isset'      => true,
-                                   'unset'      => true,
-                                   'sleep'      => true,
-                                   'wakeup'     => true,
-                                   'tostring'   => true,
-                                   'set_state'  => true,
-                                   'clone'      => true,
-                                   'invoke'     => true,
-                                   'debuginfo'  => true,
-                                  );
+        'construct'  => true,
+        'destruct'   => true,
+        'call'       => true,
+        'callstatic' => true,
+        'get'        => true,
+        'set'        => true,
+        'isset'      => true,
+        'unset'      => true,
+        'sleep'      => true,
+        'wakeup'     => true,
+        'tostring'   => true,
+        'set_state'  => true,
+        'clone'      => true,
+        'invoke'     => true,
+        'debuginfo'  => true,
+    );
 
     /**
      * Allowed public methodNames

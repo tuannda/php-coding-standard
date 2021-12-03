@@ -3,4 +3,4 @@ composer.phar
 /build
 /composer.lock
 /.idea
-/.DS_Store
+.DS_Store

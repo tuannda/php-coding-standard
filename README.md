@@ -15,7 +15,7 @@ You should see something like:-
 
 (Recommended) use composer...
 
-`composer global require codebase/php-coding-standard`
+`composer global require tuannda/php-coding-standard`
 
 or clone this repository...
 
@@ -41,7 +41,7 @@ You should now be able to set 'CodingStandard' as the phpcs standard in the plug
 
 `cd /Path/To/MyProject`  
 
-`composer require greynoise-design/php-coding-standard`  
+`composer require tuannda/php-coding-standard`  
 
 Set the 'phpcs standard path' and 'phpcbf standard path' in your editor/plugin config to:
 
@@ -84,3 +84,22 @@ Directory (recursive).
 or if globally installed.
 
 `phpcbf /Path/To/MyProject --standard=CodingStandard`
+
+### Run on Gitlab-CI
+
+````
+stylelint:
+stage: stylelint
+tags:
+- gitlab-runner
+only:
+- merge_requests
+script:
+- phpcs --config-set default_standard /Path/To/php-coding-standard/CodingStandard/
+- echo CI_COMMIT_SHA=${CI_COMMIT_SHA}
+- echo CI_MERGE_REQUEST_TARGET_BRANCH_NAME=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}
+- git fetch origin ${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}
+- FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.php'$)
+- if [ ! -z "$FILES" ]; then echo $FILES | xargs phpcs; fi
+when: always 
+```

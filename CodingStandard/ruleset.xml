@@ -1,106 +1,234 @@
 <?xml version="1.0"?>
 <ruleset name="CodingStandard">
-	<description>PHP Coding standard for PHP_CodeSniffer.</description>
-	<arg name="tab-width" value="4"/>
-	<exclude-pattern>*/config/*</exclude-pattern>
-	<exclude-pattern>*/cache/*</exclude-pattern>
-	<exclude-pattern>*/database/*</exclude-pattern>
-	<exclude-pattern>*/docs/*</exclude-pattern>
-	<exclude-pattern>*/migrations/*</exclude-pattern>
-	<exclude-pattern>*/public/index.php</exclude-pattern>
-	<exclude-pattern>*/vendor/*</exclude-pattern>
-	<exclude-pattern>*/storage/*</exclude-pattern>
-	<exclude-pattern>*/*.blade.php</exclude-pattern>
-	<exclude-pattern>*/*.css</exclude-pattern>
-	<exclude-pattern>*/*.js</exclude-pattern>
-	<exclude-pattern>*/*.xml</exclude-pattern>
-	<exclude-pattern>*/autoload.php</exclude-pattern>
-	<exclude-pattern>*/Middleware/*</exclude-pattern>
-	<exclude-pattern>*/Console/Kernel.php</exclude-pattern>
-	<exclude-pattern>*/Exceptions/Handler.php</exclude-pattern>
-	<exclude-pattern>*/Http/Kernel.php</exclude-pattern>
-	<exclude-pattern>*/Providers/*</exclude-pattern>
-	<!-- Include the whole PSR-2 standard -->
-	<rule ref="PSR12"/>
-	<!--
-	Files MUST have a doc block comment.
-	Checks file comment tag format and order.
-	-->
-	<rule ref="CodingStandard.Commenting.FileComment">
-		<properties>
-			<property name="error" value="true"/>
-		</properties>
-	</rule>
-	<!--
-	Classes MUST have a doc block comment.
-	-->
-	<rule ref="Squiz.Commenting.ClassComment"/>
-	<!--
-	Checks class comment tag format and order.
-	-->
-	<rule ref="CodingStandard.Commenting.ClassComment"/>
-	<!--
-	Allow class tags.
-	-->
-	<rule ref="Squiz.Commenting.ClassComment.TagNotAllowed">
-		<severity>0</severity>
-	</rule>
-	<!--
-	Properties MUST have a doc block comment.
-	-->
-	<rule ref="Squiz.Commenting.VariableComment"/>
-	<!--
-	Methods and functions MUST have a doc block comment.
-	-->
-	<rule ref="Squiz.Commenting.FunctionComment"/>
-	<rule ref="Squiz.Commenting.FunctionComment.ParamCommentFullStop">
-		<severity>0</severity>
-	</rule>
-	<!--
-	Doc block comment alignment.
-	-->
-	<rule ref="Squiz.Commenting.DocCommentAlignment"/>
-	<!--
-	Warn about //... comments after statments.
-	-->
-	<rule ref="Squiz.Commenting.PostStatementComment">
-		<type>warning</type>
-		<exclude phpcbf-only="true" name="Squiz.Commenting.PostStatementComment.Found"/>
-	</rule>
-	<!--
-	Change the error message.
-	-->
-	<rule ref="Squiz.Commenting.PostStatementComment.Found">
-		<message>Comments should not appear after statements</message>
-	</rule>
-	<!--
-	Doc block comment format and spacing.
-	-->
-	<rule ref="Generic.Commenting.DocComment"/>
-	<!--
-	Warning for todo items.
-	-->
-	<rule ref="Generic.Commenting.Todo"/>
-	<!--
-	Checks array bracket spaces.
-	-->
-	<rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
-	<!--
-	Check array declaration, indentation, alignment and that the last item
-	has a trailing comma.
-	Checks arrays are declared as "[]" not "array()".
-	-->
-	<rule ref="CodingStandard.Arrays.ArrayDeclaration"/>
-	<!--
-	Checks statments on subsequent lines are aligned. (line up the "=").
-	-->
-	<!-- <rule ref="Generic.Formatting.MultipleStatementAlignment">
-		<properties>
-			<property name="error" value="true"/>
-		</properties>
-	</rule> -->
-	<!--
-	Checks tabs are not used in alignment.
-	-->
-	<rule ref="CodingStandard.WhiteSpace.DisallowTabsInAlignment"/>
+    <description>PHP Coding standard for PHP_CodeSniffer.</description>
+    <exclude-pattern>vendor/</exclude-pattern>
+    <!-- Arguments -->
+    <arg name="tab-width" value="4"/>
+    <arg name="colors"/>
+    <arg name="parallel" value="75"/>
+    <arg value="nps"/>
+    <ini name="memory_limit" value="512M"/>
+    <!-- <arg name="report" value="code"/>-->
+    <arg name="report-width" value="160"/>
+
+    <exclude-pattern>*/cache/*</exclude-pattern>
+    <exclude-pattern>*/*.js</exclude-pattern>
+    <exclude-pattern>*/*.css</exclude-pattern>
+    <exclude-pattern>*/*.xml</exclude-pattern>
+    <exclude-pattern>*/*.blade.php</exclude-pattern>
+    <exclude-pattern>*/autoload.php</exclude-pattern>
+    <exclude-pattern>*/storage/*</exclude-pattern>
+    <exclude-pattern>*/docs/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/migrations/*</exclude-pattern>
+
+    <!-- Disable missing namespace rule for tests and database files -->
+    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+        <exclude-pattern>*/database/*</exclude-pattern>
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+
+    <rule ref="PSR12">
+        <exclude name="PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace"/>
+    </rule>
+    <!-- Make sure string concatenations use 1 space between every element -->
+    <rule ref="Squiz.Strings.ConcatenationSpacing">
+        <properties>
+            <property name="spacing" value="1"/>
+            <property name="ignoreNewlines" value="true"/>
+        </properties>
+    </rule>
+
+    <!-- Disallow 'else if' in favor of 'elseif' (increase PSR12 severity level from warning to error) -->
+    <rule ref="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed">
+        <type>error</type>
+    </rule>
+
+    <!-- Warn about TODOs and FIXMEs in code. -->
+    <rule ref="Generic.Commenting.Fixme"/>
+    <rule ref="Generic.Commenting.Todo"/>
+
+    <!-- Constants must be all uppercase. -->
+    <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
+
+    <!-- Forbid a bunch of functions -->
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array">
+                <!-- Forbid 'empty()'; use more strict comparison instead -->
+                <element key="empty" value="null"/>
+                <!-- Forbid some alias functions for scalars -->
+                <element key="doubleval" value="floatval"/>
+                <element key="is_double" value="is_float"/>
+                <element key="is_integer" value="is_int"/>
+                <element key="is_long" value="is_int"/>
+                <element key="is_real" value="is_float"/>
+                <element key="chop" value="rtrim"/>
+                <element key="close" value="closedir"/>
+                <element key="delete" value="unset"/>
+                <element key="fputs" value="fwrite"/>
+                <element key="ini_alter" value="ini_set"/>
+                <element key="is_long" value="is_int"/>
+                <element key="is_real" value="is_float"/>
+                <element key="is_writeable" value="is_writable"/>
+                <element key="join" value="implode"/>
+                <element key="key_exists" value="array_key_exists"/>
+                <element key="pos" value="current"/>
+                <element key="show_source" value="highlight_file"/>
+                <element key="sizeof" value="count"/>
+                <element key="strchr" value="strstr"/>
+                <!-- Forbid remaining debug functions in the code -->
+                <element key="d" value="null"/>
+                <element key="dd" value="null"/>
+                <element key="dump" value="null"/>
+                <element key="dump_d" value="null"/>
+                <element key="var_dump" value="null"/>
+                <element key="print_r" value="null"/>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Forbid deprecated functions -->
+    <rule ref="Generic.PHP.DeprecatedFunctions"/>
+
+    <!-- Forbid 'array(...)' -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+
+    <!-- Force array element indentation with one tab stop -->
+    <rule ref="Generic.Arrays.ArrayIndent"/>
+
+    <!-- Disallow 'else if' in favor of 'elseif' (increase PSR12 severity level from warning to error) -->
+    <rule ref="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed">
+        <type>error</type>
+    </rule>
+
+    <!-- Allow comments to run longer than 120 characters -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="ignoreComments" value="true"/>
+            <property name="lineLimit" value="140"/>
+            <property name="absoluteLineLimit" value="140"/>
+        </properties>
+    </rule>
+
+    <!-- only LFs allowed -->
+    <rule ref="Generic.Files.LineEndings">
+        <properties>
+            <property name="eolChar" value="\n"/>
+        </properties>
+    </rule>
+
+    <!-- Bans the use of size-based (count, sizeof, strlen) functions in loop conditions -->
+    <rule ref="Squiz.PHP.DisallowSizeFunctionsInLoops"/>
+
+    <!-- modified Squiz.Commenting.FunctionComment sniff, that allows "bool" and "int" -->
+    <rule ref="Squiz.Commenting.FunctionComment">
+        <exclude name="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing"/>
+        <exclude name="Squiz.Commenting.FunctionComment.ParamCommentNotCapital"/>
+        <exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment"/>
+        <exclude name="Squiz.Commenting.FunctionComment.ThrowsNotCapital"/>
+        <exclude name="Squiz.Commenting.FunctionComment.ThrowsNoFullStop"/>
+        <exclude name="Squiz.Commenting.FunctionComment.EmptyThrows"/>
+        <exclude name="Squiz.Commenting.FunctionComment.TypeHintMissing"/>
+        <exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamType"/>
+    </rule>
+
+    <!-- Forbid duplicate classes -->
+    <rule ref="Generic.Classes.DuplicateClassName"/>
+
+    <!-- Forbid assignments in conditions -->
+    <rule ref="Generic.CodeAnalysis.AssignmentInCondition"/>
+
+    <!-- Forbid empty statements -->
+    <rule ref="Generic.CodeAnalysis.EmptyStatement" />
+
+    <rule ref="PSR1.Classes.ClassDeclaration" />
+    <rule ref="PSR1.Methods.CamelCapsMethodName" />
+    <rule ref="PSR2.ControlStructures.ControlStructureSpacing" />
+    <rule ref="PSR2.Namespaces.NamespaceDeclaration" />
+    <rule ref="PSR2.Namespaces.UseDeclaration" />
+
+    <!-- Disable "Visibility must be declared on method" rule for test files -->
+    <rule ref="Squiz.Scope.MethodScope">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+
+    <!-- Disable camel caps rule for tests -->
+    <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+
+    <!-- Forbid final methods in final classes -->
+    <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
+
+    <!-- Forbid useless empty method overrides -->
+    <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
+
+    <!-- Align corresponding assignment statement tokens -->
+    <rule ref="Generic.Formatting.MultipleStatementAlignment">
+        <exclude name="Generic.Formatting.MultipleStatementAlignment.NotSame" />
+        <properties>
+            <property name="error" value="true"/>
+        </properties>
+    </rule>
+
+    <!-- Forbid blank line after function opening brace -->
+    <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
+
+    <!-- Require 1 line before and after function, except at the top and bottom -->
+    <rule ref="Squiz.WhiteSpace.FunctionSpacing">
+        <properties>
+            <property name="spacing" value="1" />
+            <property name="spacingBeforeFirst" value="0"/>
+            <property name="spacingAfterLast" value="0"/>
+        </properties>
+    </rule>
+
+    <!-- Forbid `AND` and `OR`, require `&&` and `||` -->
+    <rule ref="Squiz.Operators.ValidLogicalOperators"/>
+
+    <!-- Force camelCase variables -->
+    <rule ref="Squiz.NamingConventions.ValidVariableName">
+        <exclude name="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore" />
+    </rule>
+
+    <!-- Forbid `global` -->
+    <rule ref="Squiz.PHP.GlobalKeyword"/>
+
+    <!-- Checks that no whitespace exists after the last content of the file -->
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace.EndFile">
+        <!-- Increase severity from 0 -->
+        <severity>5</severity>
+    </rule>
+
+    <!-- Checks that there are not multiple consecutive empty lines in functions -->
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace.EmptyLines">
+        <!-- Increase severity from 0 -->
+        <severity>5</severity>
+    </rule>
+
+    <!-- Ensure 1 space between type hint and argument -->
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterHint">
+        <!-- Increase severity from 0 -->
+        <severity>5</severity>
+    </rule>
+
+    <!-- Checks for empty PHP statements -->
+    <rule ref="Generic.CodeAnalysis.EmptyPHPStatement" />
+
+    <!-- Checks Git Merge Conflict -->
+    <rule ref="Generic.VersionControl.GitMergeConflict" />
+
+    <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement">
+        <type>error</type> <!-- Make this an error instead of a warning -->
+    </rule>
+
+    <!-- Checks for unused function parameters -->
+    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter">
+        <type>error</type> <!-- Make this an error instead of a warning -->
+    </rule>
+
+    <!-- Properties MUST have a doc block comment. -->
+    <rule ref="Squiz.Commenting.VariableComment"/>
 </ruleset>
