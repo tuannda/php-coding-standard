@@ -394,21 +394,21 @@ class ArrayDeclarationSniff implements Sniff
         }//end switch
 
         // If this is the first argument in a function ensure the bracket to be right after the parenthesis. eg "array_combine([".
-        if ($tokens[$prevNonWhitespaceToken]['code'] === T_OPEN_PARENTHESIS && $tokens[$stackPtr]['code'] === T_OPEN_SHORT_ARRAY) {
-            if ($tokens[$stackPtr]['line'] > $tokens[$prevNonWhitespaceToken]['line']) {
-                $error = 'Array open bracket should be after function open parenthesis "(["';
-                $data  = array();
-                $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'ShortArrayOpenWrongLine', $data);
-                if ($fix === true) {
-                    $phpcsFile->fixer->beginChangeset();
-                    for ($i = ($prevNonWhitespaceToken + 1); $i < $stackPtr; $i++) {
-                        $phpcsFile->fixer->replaceToken($i, '');
-                    }
+        // if ($tokens[$prevNonWhitespaceToken]['code'] === T_OPEN_PARENTHESIS && $tokens[$stackPtr]['code'] === T_OPEN_SHORT_ARRAY) {
+        //     if ($tokens[$stackPtr]['line'] > $tokens[$prevNonWhitespaceToken]['line']) {
+        //         $error = 'Array open bracket should be after function open parenthesis "(["';
+        //         $data  = array();
+        //         $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'ShortArrayOpenWrongLine', $data);
+        //         if ($fix === true) {
+        //             $phpcsFile->fixer->beginChangeset();
+        //             for ($i = ($prevNonWhitespaceToken + 1); $i < $stackPtr; $i++) {
+        //                 $phpcsFile->fixer->replaceToken($i, '');
+        //             }
 
-                    $phpcsFile->fixer->endChangeset();
-                }
-            }
-        }
+        //             $phpcsFile->fixer->endChangeset();
+        //         }
+        //     }
+        // }
 
         // Check the closing bracket is on a new line.
 //        $lastContent = $phpcsFile->findPrevious(T_WHITESPACE, ($arrayEnd - 1), $arrayStart, true);
@@ -663,35 +663,36 @@ class ArrayDeclarationSniff implements Sniff
 
                         $phpcsFile->fixer->addNewlineBefore($value['value']);
                     }
-                } else if ($tokens[($value['value'] - 1)]['code'] === T_WHITESPACE) {
+                }
+                //  else if ($tokens[($value['value'] - 1)]['code'] === T_WHITESPACE) {
                     // Expected indent.
-                    if ($tokens[$indentStart]['column'] > 1) {
-                        $expected = ($tokens[$indentStart]['column'] + $this->tabWidth - 1);
-                    } else {
-                        $expected = $this->tabWidth;
-                    }
+                    // if ($tokens[$indentStart]['column'] > 1) {
+                    //     $expected = ($tokens[$indentStart]['column'] + $this->tabWidth - 1);
+                    // } else {
+                    //     $expected = $this->tabWidth;
+                    // }
 
-                    $first = $phpcsFile->findFirstOnLine(T_WHITESPACE, $value['value'], true);
-                    $found = ($tokens[$first]['column'] - 1);
+                    // $first = $phpcsFile->findFirstOnLine(T_WHITESPACE, $value['value'], true);
+                    // $found = ($tokens[$first]['column'] - 1);
 
-                    if ($found !== $expected) {
-                        $error = 'Array value not aligned correctly; expected %s %s but found %s';
-                        $data  = array(
-                            $expected,
-                            Common::pluralize($this->indentUnit, $expected),
-                            $found,
-                        );
+                    // if ($found !== $expected) {
+                    //     $error = 'Array value not aligned correctly; expected %s %s but found %s';
+                    //     $data  = array(
+                    //         $expected,
+                    //         Common::pluralize($this->indentUnit, $expected),
+                    //         $found,
+                    //     );
 
-                        $fix = $phpcsFile->addFixableError($error, $value['value'], 'ValueNotAligned', $data);
-                        if ($fix === true) {
-                            if ($found === 0) {
-                                $phpcsFile->fixer->addContent(($value['value'] - 1), str_repeat(' ', $expected));
-                            } else {
-                                $phpcsFile->fixer->replaceToken(($value['value'] - 1), str_repeat(' ', $expected));
-                            }
-                        }
-                    }
-                }//end if
+                    //     $fix = $phpcsFile->addFixableError($error, $value['value'], 'ValueNotAligned', $data);
+                    //     if ($fix === true) {
+                    //         if ($found === 0) {
+                    //             $phpcsFile->fixer->addContent(($value['value'] - 1), str_repeat(' ', $expected));
+                    //         } else {
+                    //             $phpcsFile->fixer->replaceToken(($value['value'] - 1), str_repeat(' ', $expected));
+                    //         }
+                    //     }
+                    // }
+                // }//end if
 
                 $lastValueLine = $tokens[$value['value']]['line'];
             }//end foreach

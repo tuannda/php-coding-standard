@@ -44,7 +44,7 @@ class EmptyLineBeforeReturnSniff implements Sniff
             $newlines < 2
             && $previousContent !== "{"
         ) {
-            $this->file->addWarning(
+            $this->file->addError(
                 "Missing empty line before return.",
                 $this->stackPointer,
                 "EmptyLineBeforeReturn"
@@ -58,7 +58,7 @@ class EmptyLineBeforeReturnSniff implements Sniff
                 && $previousContent !== "{")
         ) {
             $extraNewLines = $newlines - 1;
-            $this->file->addWarning(
+            $this->file->addError(
                 "{$extraNewLines} extraneous empty line(s) before return at beginning of block.",
                 $this->stackPointer,
                 "NoEmptyLineBeforeReturnAtBeginningOfBlock"

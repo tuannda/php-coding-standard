@@ -43,7 +43,7 @@ class MultipleEmptyLinesSniff implements Sniff
         $newlines = substr_count($whitespace, "\n");
 
         if ($newlines > 1) {
-            $this->file->addWarning(
+            $this->file->addError(
                 "Code should not have multiple consecutive empty lines.",
                 $this->stackPointer,
                 "MultipleConsecutiveEmptyLines"
