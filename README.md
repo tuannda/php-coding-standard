@@ -87,7 +87,7 @@ or if globally installed.
 
 ### Run on Gitlab-CI
 
-````
+```
 stylelint:
 stage: stylelint
 tags:
