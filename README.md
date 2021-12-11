@@ -103,3 +103,10 @@ script:
 - if [ ! -z "$FILES" ]; then echo $FILES | xargs phpcs; fi
 when: always 
 ```
+
+### Change crlf to lf on windows
+
+```
+git config --global core.autocrlf false
+git config --global core.safecrlf false
+```
